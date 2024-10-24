@@ -32,7 +32,7 @@ declare class Vec2D {
     plus_vec(other: Vec2D): Vec2D;
     minus(x: number, y: number): Vec2D;
     minus_vec(other: Vec2D): Vec2D;
-    to(target: Vec2D): Vec2D;
+    shift_to(target: Vec2D): Vec2D;
     orth_proj_factor(base_vec: Vec2D): number;
     orth_proj(base_vec: Vec2D): Vec2D;
     perp_proj(base_vec: Vec2D): Vec2D;
@@ -226,4 +226,14 @@ declare class LineSegment2D {
     mid_vec(): Vec2D;
 }
 
-export { AlRect2D, AlRect2DCorner, type AlRect2DJson, Circle2D, Color, Dimension2D, GlColor, Line2D, LineIntersection2D, LineSegment2D, Mat22, NumberExtensions, TOL, Triangle2D, Triangle4D, Vec2D, type Vec2DJson, Vec4 };
+declare class UiAlRect {
+    tl_vec: Vec2D;
+    width: number;
+    height: number;
+    constructor(tl_vec: Vec2D, width: number, height: number);
+    vertex(corner: AlRect2DCorner.Class): Vec2D;
+    vertices(): Vec2D[];
+    center(): Vec2D;
+}
+
+export { AlRect2D, AlRect2DCorner, type AlRect2DJson, Circle2D, Color, Dimension2D, GlColor, Line2D, LineIntersection2D, LineSegment2D, Mat22, NumberExtensions, TOL, Triangle2D, Triangle4D, UiAlRect, Vec2D, type Vec2DJson, Vec4 };

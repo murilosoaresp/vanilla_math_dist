@@ -1,4 +1,4 @@
-import { CoreExtensions, List } from 'vanilla_core';
+import { CoreExtensions, List, exaustive_switch } from 'vanilla_core';
 
 class Vec4 {
     x;
@@ -71,7 +71,7 @@ class Vec2D {
     minus_vec(other) {
         return new Vec2D(this.x - other.x, this.y - other.y);
     }
-    to(target) {
+    shift_to(target) {
         return target.minus_vec(this);
     }
     orth_proj_factor(base_vec) {
@@ -336,7 +336,7 @@ class Circle2D {
         this.radius = radius;
     }
     constains(vec) {
-        return this.center.to(vec).norm() <= this.radius;
+        return this.center.shift_to(vec).norm() <= this.radius;
     }
     triangles(n) {
         let output = new List();
@@ -425,6 +425,42 @@ class LineSegment2D {
     }
     mid_vec() {
         return this.a.plus_vec(this.b).times_scalar(0.5);
+    }
+}
+
+class UiAlRect {
+    tl_vec;
+    width;
+    height;
+    constructor(tl_vec, width, height) {
+        this.tl_vec = tl_vec;
+        this.width = width;
+        this.height = height;
+    }
+    vertex(corner) {
+        switch (corner.tag) {
+            case "TL":
+                return this.tl_vec.clone();
+            case "TR":
+                return this.tl_vec.plus(this.width, 0.0);
+            case "BR":
+                return this.tl_vec.plus(this.width, this.height);
+            case "BL":
+                return this.tl_vec.plus(0.0, this.height);
+            default:
+                exaustive_switch(corner.tag);
+        }
+    }
+    vertices() {
+        return [
+            this.tl_vec.plus(0.0, this.height),
+            this.tl_vec.plus(this.width, this.height),
+            this.tl_vec.plus(this.width, 0.0),
+            this.tl_vec.clone(),
+        ];
+    }
+    center() {
+        return this.tl_vec.plus(0.5 * this.width, 0.5 * this.height);
     }
 }
 
@@ -533,4 +569,4 @@ class Color {
     }
 }
 
-export { AlRect2D, AlRect2DCorner, Circle2D, Color, Dimension2D, GlColor, Line2D, LineIntersection2D, LineSegment2D, Mat22, NumberExtensions, TOL, Triangle2D, Triangle4D, Vec2D, Vec4 };
+export { AlRect2D, AlRect2DCorner, Circle2D, Color, Dimension2D, GlColor, Line2D, LineIntersection2D, LineSegment2D, Mat22, NumberExtensions, TOL, Triangle2D, Triangle4D, UiAlRect, Vec2D, Vec4 };
